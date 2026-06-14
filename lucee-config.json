@@ -11,6 +11,12 @@
             "maven": "org.lucee:mcp-server-extension:1.0.1.3-SNAPSHOT",
             "name": "MCP Server",
             "version": "1.0.1.3-SNAPSHOT"
+        },
+        {
+            "id": "EFDEB172-F52E-4D84-9CD1A1F561B3DFC8",
+            "maven": "org.lucee:lucene-search-extension:3.0.0.163",
+            "name": "Lucene Search",
+            "version": "3.0.0.163"
         }
     ],
     "loggers": {
