@@ -5,7 +5,6 @@ services:
     environment:
       - LUCEE_ADMIN_PASSWORD=qwerty
     ports:
-      - "8856:8888"  # tomcat
-      - "8056:80"    # nginx
+      - "8856:8080" # PORT (Cloud Run compatible)
 
 # docker compose up -d --build

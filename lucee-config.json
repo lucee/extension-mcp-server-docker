@@ -1,10 +1,13 @@
 {
     "mode": "single",
-    "mappings": {
-        "/": {
-            "physical": "{lucee-config}/context/mcp/"
+    "componentMappings": [
+        {
+            "physical": "{lucee-config}/components/",
+            "archive": "",
+            "primary": "physical",
+            "inspectTemplate": "never"
         }
-    },
+    ],
     "extensions": [
         {
             "id": "B5059590-2112-49FB-AEDFB997252EDA18",
@@ -17,6 +20,9 @@
             "maven": "org.lucee:lucene-search-extension:3.0.0.163",
             "name": "Lucene Search",
             "version": "3.0.0.163"
+        },
+        {
+            "maven": "org.lucee:esapi-extension:3.0.0.14"
         }
     ],
     "loggers": {

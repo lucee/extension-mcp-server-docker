@@ -1,6 +1,6 @@
 # Lucee MCP Server — Docker
 
-Minimal Docker image running Lucee 7.1 with the [MCP Server extension](https://github.com/lucee/extension-mcp-server). The MCP JSON-RPC endpoint is mapped to the webroot — there is no separate landing page or test UI.
+Minimal Docker image running Lucee 8.0 (light) with the [MCP Server extension](https://github.com/lucee/extension-mcp-server). `GET /` serves a landing page explaining the endpoint and its tools; `POST /` is the MCP JSON-RPC endpoint.
 
 This image installs the Lucene Search extension so `search_lucee_docs` can index and search Lucee documentation (functions, tags, and recipes).
 
@@ -16,16 +16,13 @@ Lucee downloads the MCP and Lucene extensions on first startup. The container ne
 
 ## Ports
 
-| Port   | Service           |
-|--------|-------------------|
-| `8056` | Nginx (main HTTP) |
-| `8856` | Tomcat (direct)   |
-
-Use Tomcat (`8856`) if Nginx is not responding in your environment.
+| Port   | Service |
+|--------|---------|
+| `8856` | Tomcat  |
 
 ## MCP Endpoint
 
-CFConfig maps the MCP extension to the webroot. **Use `POST /` only** — this image does not expose a separate MCP path.
+`POST /` is the JSON-RPC endpoint — there is no separate path per tool.
 
 ```
 POST /
@@ -33,7 +30,7 @@ POST /
 
 Example: `http://localhost:8856/`
 
-`GET /` returns a JSON-RPC error (`only POST is supported`).
+`GET /` (or any other method) serves an HTML landing page describing the endpoint, its tools, and how to add it to Claude, ChatGPT, and Gemini.
 
 ### Tools
 
@@ -74,11 +71,13 @@ curl -s -X POST http://localhost:8856/ \
   -d '{"jsonrpc":"2.0","method":"tools/call","id":3,"params":{"name":"search_lucee_docs","arguments":{"query":"how to read a file","maxResults":3}}}'
 ```
 
-Replace `8856` with `8056` when using the Nginx port.
-
 ## CFConfig
 
-The image ships a single CFConfig file that maps `/` to the MCP extension context and installs MCP Server and Lucene Search from Maven. CFConfig extensions are applied on a fresh server install — recreate the container (`docker compose down && docker compose up -d --build`) after changing `lucee-config.json`.
+The image ships a single CFConfig file that installs the MCP Server, Lucene Search, and ESAPI extensions from Maven (ESAPI provides `encodeForHTML`/`encodeForURL`, used by the landing page). CFConfig extensions are applied on a fresh server install — recreate the container (`docker compose down && docker compose up -d --build`) after changing `lucee-config.json`.
+
+## Server.cfc
+
+`Server.cfc` (copied to `lucee-server/context/context/Server.cfc`) creates the `MCPServer` instance once, in the global `server` scope, when the Lucee server starts — shared across all requests instead of being rebuilt per application/request.
 
 ## Cursor / Claude MCP client config
 
