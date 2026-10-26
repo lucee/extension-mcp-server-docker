@@ -58,14 +58,14 @@ Settings of the MCP Server extension can also be passed as environment variables
 | Argument | Default | Purpose |
 |----------|---------|---------|
 | `LUCEE_IMAGE` | `lucee/lucee:7.1.1.17-light` | Lucee base image |
-| `MCP_SERVER_VERSION` | `1.0.1.5` | MCP Server extension version |
+| `MCP_SERVER_VERSION` | `1.0.1.6` | MCP Server extension version |
 | `LUCENE_SEARCH_VERSION` | `3.0.0.163` | Lucene Search extension version |
 | `ESAPI_VERSION` | `3.0.0.14` | ESAPI extension version |
 | `MAVEN_REPOSITORY` | `https://repo1.maven.org/maven2` | Maven repository the extensions are downloaded from |
 | `PREBUILD_SEARCH_INDEX` | `true` | Build the documentation search index while building the image |
 
 ```bash
-docker build --build-arg MCP_SERVER_VERSION=1.0.1.5 -t lucee-mcp .
+docker build --build-arg MCP_SERVER_VERSION=1.0.1.6 -t lucee-mcp .
 ```
 
 The MCP Server extension does not implement endpoint authentication.
