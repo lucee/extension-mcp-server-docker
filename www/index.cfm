@@ -31,42 +31,26 @@ tools = [
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Lucee MCP Server</title>
 	<link rel="icon" type="image/png" href="/res/favicon.png">
-	<link rel="stylesheet" href="/res/mcp.css?v=1">
+	<script>try{var t=localStorage.getItem("lucee-theme");if(t==="light"||t==="dark")document.documentElement.setAttribute("data-theme",t)}catch(e){}</script>
+	<link rel="stylesheet" href="/res/lucee-header/theme.css" data-lucee-theme-css>
+	<link rel="stylesheet" href="/res/lucee-header/header.css" data-lucee-header-css>
+	<script src="/res/lucee-header/header.js" defer></script>
+	<link rel="stylesheet" href="/res/mcp.css?v=2">
 </head>
 <body>
 <cfoutput>
 
 <!--- ── Header ── --->
-<header class="site-header">
-	<a href="/" class="logo">
-		<img src="/res/lucee-logo.svg" alt="Lucee" height="36">
-		<span class="logo-subtitle">MCP</span>
-	</a>
-	<nav>
-		<a href="https://docs.lucee.org"     target="_blank">Docs</a>
-		<a href="https://dev.lucee.org"      target="_blank">Forum</a>
-		<a href="https://github.com/lucee"   target="_blank">GitHub</a>
-		<a href="https://hub.docker.com/r/lucee/lucee" target="_blank">Docker Hub</a>
-		<a href="https://buymeacoffee.com/luceeorg" target="_blank" class="bmc-link">
-			<img src="/res/byme2.png" class="bmc-icon" alt="Buy me a coffee">
-			<img src="/res/byme.png"  class="bmc-full" alt="Buy me a coffee">
-		</a>
-		<a href="https://opencollective.com/lucee" target="_blank" class="nav-highlight">
-			<svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor" stroke="none"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-			Donate
-		</a>
-		<a href="https://skill.lucee.io/" target="_blank" class="nav-highlight">
-			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-			Skills
-		</a>
-		<a href="https://download.lucee.org/" target="_blank" class="nav-highlight">
-			<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0l-4-4m4 4l4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
-			Downloads
-		</a>
-	</nav>
-</header>
+<lucee-header home="https://lucee.org/" current="ai">
+	<a href="https://lucee.org/" aria-label="Lucee home">Lucee</a><a href="https://download.lucee.org/">Download</a><a href="https://docs.lucee.org/">Docs</a><a href="https://lucee.org/extensions.html">Extensions</a><a href="https://lucee.org/community.html">Community</a><a href="https://lucee.org/ai.html">AI</a><a href="https://lucee.org/support.html">Support</a>
+</lucee-header>
 
 <div class="container">
+
+<!--- ── Page title ── --->
+<div class="page-title">
+	<h1>Lucee MCP Server</h1>
+</div>
 
 <!--- ── What is MCP ── --->
 <section>
@@ -166,7 +150,8 @@ tools = [
 		<a href="https://github.com/lucee" target="_blank">GitHub</a> &middot;
 		<a href="https://dev.lucee.org"    target="_blank">Forum</a> &middot;
 		<a href="https://docs.lucee.org"   target="_blank">Docs</a> &middot;
-		<a href="https://hub.docker.com/r/lucee/lucee" target="_blank">Docker Hub</a>
+		<a href="https://hub.docker.com/r/lucee/lucee" target="_blank">Docker Hub</a> &middot;
+		<a href="https://opencollective.com/lucee" target="_blank">Donate</a>
 	</span>
 </footer>
 
