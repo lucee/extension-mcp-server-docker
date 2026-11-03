@@ -25,5 +25,31 @@
             "layout": "classic",
             "level": "debug"
         }
-    }
+    },
+    "extensions": [
+        {
+            "id": "212BA548-F15A-4EBD-8B1EEDF8DD8A844D",
+            "name": "Mail"
+        },
+        {
+            "id": "C09479BE-3309-47AB-BD2D89F9973D8A03",
+            "name": "FTP"
+        },
+        {
+            "id": "66E312DD-D083-27C0-64189D16753FD6F0",
+            "name": "PDF"
+        },
+        {
+            "id": "17AB52DE-B300-A94B-E058BD978511E39E",
+            "name": "S3"
+        },
+        {
+            "id": "B737ABC4-D43F-4D91-8E8E973E37C40D1B",
+            "name": "Image"
+        },
+        {
+            "id": "60772C12-F179-D555-8E2CD2B4F7428718",
+            "name": "Redis"
+        }
+    ]
 }

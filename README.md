@@ -97,6 +97,8 @@ The image ships a single CFConfig file (`lucee-config.json`) with the component 
 
 The MCP Server, Lucene Search, and ESAPI extensions (ESAPI provides `encodeForHTML`/`encodeForURL`, used by the landing page) are downloaded from Maven into Lucee's deploy folder during the build. `prepare-image.sh` then starts Lucee once inside the build, which installs them, compiles the templates, and builds the documentation search index, and stops it again. Use the build arguments above to change the versions.
 
+The Mail, FTP, PDF, S3, Image, and Redis extensions are declared by ID, without a version, in the `extensions` array of `lucee-config.json`. Lucee installs the latest version of each during the same build-time start, so `get_lucee_tag` and `get_lucee_function` also cover the tags and functions they provide (the base `-light` image ships without extensions). The resolved versions are written into the image's config, so a running container does not look anything up or install anything. `prepare-image.sh` fails the build if a tag or function of one of them can't be looked up. Because no version is pinned, rebuilding the image picks up newer versions; to pin one, add a `version` to its entry.
+
 ## Server.cfc
 
 `Server.cfc` (copied to `lucee-server/context/context/Server.cfc`) creates the `MCPServer` instance once, in the global `server` scope, when the Lucee server starts — shared across all requests instead of being rebuilt per application/request. `index.cfm` creates it on the first request if it does not exist yet.
