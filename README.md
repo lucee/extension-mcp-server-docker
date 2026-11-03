@@ -61,12 +61,6 @@ Settings of the MCP Server extension can also be passed as environment variables
 | `MCP_SERVER_VERSION` | `1.0.1.6` | MCP Server extension version |
 | `LUCENE_SEARCH_VERSION` | `3.0.0.163` | Lucene Search extension version |
 | `ESAPI_VERSION` | `3.0.0.14` | ESAPI extension version |
-| `MAIL_VERSION` | `1.1.0.24` | Mail extension version (`cfmail`, ...) |
-| `FTP_VERSION` | `1.0.0.9` | FTP extension version (`cfftp`) |
-| `PDF_VERSION` | `3.0.0.2` | PDF extension version (`cfpdf`, ...) |
-| `S3_VERSION` | `2.1.0.15` | S3 extension version (`s3Exists`, ...) |
-| `IMAGE_VERSION` | `3.1.0.11` | Image extension version (`cfimage`, `imageNew`, ...) |
-| `REDIS_VERSION` | `4.2.0.6` | Redis extension version (`redisCommand`, ...) |
 | `MAVEN_REPOSITORY` | `https://repo1.maven.org/maven2` | Maven repository the extensions are downloaded from |
 | `PREBUILD_SEARCH_INDEX` | `true` | Build the documentation search index while building the image |
 
@@ -103,7 +97,7 @@ The image ships a single CFConfig file (`lucee-config.json`) with the component 
 
 The MCP Server, Lucene Search, and ESAPI extensions (ESAPI provides `encodeForHTML`/`encodeForURL`, used by the landing page) are downloaded from Maven into Lucee's deploy folder during the build. `prepare-image.sh` then starts Lucee once inside the build, which installs them, compiles the templates, and builds the documentation search index, and stops it again. Use the build arguments above to change the versions.
 
-The Mail, FTP, PDF, S3, Image, and Redis extensions are installed the same way so that `get_lucee_tag` and `get_lucee_function` also cover the tags and functions they provide (the base `-light` image ships without extensions). The build fails if any extension is left in the deploy folder, i.e. was not installed.
+The Mail, FTP, PDF, S3, Image, and Redis extensions are declared by ID, without a version, in the `extensions` array of `lucee-config.json`. Lucee installs the latest version of each during the same build-time start, so `get_lucee_tag` and `get_lucee_function` also cover the tags and functions they provide (the base `-light` image ships without extensions). The resolved versions are written into the image's config, so a running container does not look anything up or install anything. `prepare-image.sh` fails the build if a tag or function of one of them can't be looked up. Because no version is pinned, rebuilding the image picks up newer versions; to pin one, add a `version` to its entry.
 
 ## Server.cfc
 

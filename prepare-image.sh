@@ -39,6 +39,22 @@ for ext in /opt/lucee/server/lucee-server/deploy/*.lex; do
 	[ -e "$ext" ] && fail "extension was not installed: $ext"
 done
 
+# The extensions declared in lucee-config.json (installed at their latest version
+# by this first start) must provide their tags and functions: look one up for each.
+lookup() {
+	post "{\"jsonrpc\":\"2.0\",\"method\":\"tools/call\",\"id\":3,\"params\":{\"name\":\"$1\",\"arguments\":{\"name\":\"$2\"}}}" \
+		|| fail "$1 $2 request failed"
+	grep -q '"isError":true' "$OUT" && fail "$1 $2 returned an error"
+	grep -q " not found" "$OUT" && fail "extension not installed: $1 $2 not found"
+	grep -qi "$2" "$OUT" || fail "extension not installed: $1 $2 returned no data"
+}
+lookup get_lucee_tag mail
+lookup get_lucee_tag ftp
+lookup get_lucee_tag pdf
+lookup get_lucee_function s3Exists
+lookup get_lucee_function imageNew
+lookup get_lucee_function redisCommand
+
 wget -q -O /dev/null --timeout=120 "$URL" || fail "landing page failed"
 
 if [ "$PREBUILD_SEARCH_INDEX" = "true" ]; then

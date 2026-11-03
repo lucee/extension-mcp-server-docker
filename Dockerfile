@@ -6,13 +6,6 @@ FROM --platform=linux/amd64 ${LUCEE_IMAGE}
 ARG MCP_SERVER_VERSION=1.0.1.6
 ARG LUCENE_SEARCH_VERSION=3.0.0.163
 ARG ESAPI_VERSION=3.0.0.14
-# Extensions that provide tags and functions, so get_lucee_tag and get_lucee_function know about them (LDEV-6502).
-ARG MAIL_VERSION=1.1.0.24
-ARG FTP_VERSION=1.0.0.9
-ARG PDF_VERSION=3.0.0.2
-ARG S3_VERSION=2.1.0.15
-ARG IMAGE_VERSION=3.1.0.11
-ARG REDIS_VERSION=4.2.0.6
 ARG MAVEN_REPOSITORY=https://repo1.maven.org/maven2
 # set to "false" to skip building the documentation search index at build time
 ARG PREBUILD_SEARCH_INDEX=true
@@ -30,13 +23,7 @@ RUN mkdir -p /opt/lucee/server/lucee-server/deploy \
 	&& cd /opt/lucee/server/lucee-server/deploy \
 	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/mcp-server-extension/${MCP_SERVER_VERSION}/mcp-server-extension-${MCP_SERVER_VERSION}.lex" \
 	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/lucene-search-extension/${LUCENE_SEARCH_VERSION}/lucene-search-extension-${LUCENE_SEARCH_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/esapi-extension/${ESAPI_VERSION}/esapi-extension-${ESAPI_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/mail-extension/${MAIL_VERSION}/mail-extension-${MAIL_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/ftp-extension/${FTP_VERSION}/ftp-extension-${FTP_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/pdf-extension/${PDF_VERSION}/pdf-extension-${PDF_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/s3-extension/${S3_VERSION}/s3-extension-${S3_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/image-extension/${IMAGE_VERSION}/image-extension-${IMAGE_VERSION}.lex" \
-	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/redis-extension/${REDIS_VERSION}/redis-extension-${REDIS_VERSION}.lex"
+	&& wget -q "${MAVEN_REPOSITORY}/org/lucee/esapi-extension/${ESAPI_VERSION}/esapi-extension-${ESAPI_VERSION}.lex"
 
 # Start Lucee once at build time: installs the extensions, compiles the templates
 # and (optionally) builds the documentation search index.
