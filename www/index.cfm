@@ -14,6 +14,30 @@ if (cgi.request_method == "POST") {
 	abort;
 }
 
+// Streamable HTTP: an MCP client may GET the endpoint with
+// Accept: text/event-stream to open a standalone SSE stream. This server
+// does not offer one. Returning the HTML page as 200 makes clients treat
+// it as a broken stream and reconnect in a tight loop. The spec requires
+// 405 Method Not Allowed in this case. Browsers send Accept: text/html
+// and still get the landing page.
+if (listFindNoCase("GET,HEAD", cgi.request_method)) {
+	accept = lCase(toString(cgi.http_accept ?: ""));
+	if (find("text/event-stream", accept) && !find("text/html", accept)) {
+		header statuscode=405 statustext="Method Not Allowed";
+		header name="Allow" value="POST";
+		content type="text/plain" reset=true;
+		abort;
+	}
+}
+
+// Streamable HTTP: DELETE ends a session. This server has no sessions.
+if (cgi.request_method == "DELETE") {
+	header statuscode=405 statustext="Method Not Allowed";
+	header name="Allow" value="POST";
+	content type="text/plain" reset=true;
+	abort;
+}
+
 endpointUrl = "https://" & cgi.http_host & "/";
 
 tools = [
