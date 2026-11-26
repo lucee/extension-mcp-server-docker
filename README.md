@@ -1,6 +1,6 @@
 # Lucee MCP Server — Docker
 
-Minimal Docker image running Lucee 7.1 (light) with the [MCP Server extension](https://github.com/lucee/extension-mcp-server). `GET /` serves a landing page explaining the endpoint and its tools; `POST /` is the MCP JSON-RPC endpoint.
+Minimal Docker image running Lucee 7.1 (light) with the [MCP Server extension](https://github.com/lucee/extension-mcp-server). `GET /` serves a landing page for browsers; `POST /` is the MCP JSON-RPC endpoint.
 
 This image installs the Lucene Search extension so `search_lucee_docs` can index and search Lucee documentation (functions, tags, and recipes).
 
@@ -30,7 +30,7 @@ POST /
 
 Example: `http://localhost:8856/`
 
-`GET /` (or any other method) serves an HTML landing page describing the endpoint, its tools, and how to add it to Claude, ChatGPT, and Gemini.
+`GET /` is dual-purpose. A browser (`Accept` includes `text/html`) gets an HTML landing page describing the endpoint, its tools, and how to add it to Claude, ChatGPT, and Gemini. Any other `GET` or `HEAD` (MCP clients asking for `text/event-stream` or `application/json`) receives `403 Forbidden` and an empty body. `DELETE /` returns `405 Method Not Allowed` (no session management).
 
 ### Tools
 

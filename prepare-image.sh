@@ -55,7 +55,37 @@ lookup get_lucee_function s3Exists
 lookup get_lucee_function imageNew
 lookup get_lucee_function redisCommand
 
-wget -q -O /dev/null --timeout=120 "$URL" || fail "landing page failed"
+wget -q -O "$OUT" --timeout=120 --header="Accept: text/html,application/xhtml+xml;q=0.9,*/*;q=0.8" "$URL" \
+	|| fail "landing page failed"
+grep -q "Lucee MCP Server" "$OUT" || fail "landing page content missing"
+
+# Non-browser GET (MCP clients, Accept without text/html) must return 403
+# and not the HTML page, or clients may treat 200 HTML as a broken stream.
+assert_forbidden_get() {
+	accept="$1"
+	label="$2"
+	hdr=/tmp/prepare-forbid.hdr
+	body=/tmp/prepare-forbid.body
+	if wget -S -O "$body" --timeout=30 --tries=1 --header="Accept: $accept" "$URL" 2>"$hdr"; then
+		fail "$label should return 403, not success"
+	fi
+	grep -qE "HTTP/[0-9.]+ 403" "$hdr" || fail "$label should return 403"
+	if [ -s "$body" ] && grep -q "<html" "$body"; then
+		fail "$label should not return the HTML landing page"
+	fi
+	rm -f "$hdr" "$body"
+}
+assert_forbidden_get "text/event-stream" "SSE GET"
+assert_forbidden_get "application/json" "JSON GET"
+
+# DELETE ends an MCP session; this server has no sessions, so 405.
+del_hdr=/tmp/prepare-del.hdr
+if wget -S -O /dev/null --timeout=30 --tries=1 --method=DELETE "$URL" 2>"$del_hdr"; then
+	fail "DELETE should return 405, not success"
+fi
+grep -qE "HTTP/[0-9.]+ 405" "$del_hdr" || fail "DELETE should return 405"
+grep -qi "Allow: POST" "$del_hdr" || fail "DELETE should send Allow: POST"
+rm -f "$del_hdr"
 
 if [ "$PREBUILD_SEARCH_INDEX" = "true" ]; then
 	post '{"jsonrpc":"2.0","method":"tools/call","id":2,"params":{"name":"search_lucee_docs","arguments":{"query":"arraySort","maxResults":1}}}' \
