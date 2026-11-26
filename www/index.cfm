@@ -14,17 +14,16 @@ if (cgi.request_method == "POST") {
 	abort;
 }
 
-// Streamable HTTP: an MCP client may GET the endpoint with
-// Accept: text/event-stream to open a standalone SSE stream. This server
-// does not offer one. Returning the HTML page as 200 makes clients treat
-// it as a broken stream and reconnect in a tight loop. The spec requires
-// 405 Method Not Allowed in this case. Browsers send Accept: text/html
-// and still get the landing page.
+// This URL is dual-purpose: browsers get the HTML landing page, MCP
+// clients use the same path as the JSON-RPC endpoint. A browser GET/HEAD
+// sends Accept: text/html and still gets 200 with the page. Any other
+// GET/HEAD (MCP clients asking for text/event-stream or application/json,
+// tools sending */*, etc.) gets 403 and an empty body, so the HTML page
+// is not returned as if it were a stream.
 if (listFindNoCase("GET,HEAD", cgi.request_method)) {
 	accept = lCase(toString(cgi.http_accept ?: ""));
-	if (find("text/event-stream", accept) && !find("text/html", accept)) {
-		header statuscode=405 statustext="Method Not Allowed";
-		header name="Allow" value="POST";
+	if (!find("text/html", accept)) {
+		header statuscode=403 statustext="Forbidden";
 		content type="text/plain" reset=true;
 		abort;
 	}

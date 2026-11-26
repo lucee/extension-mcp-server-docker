@@ -30,7 +30,7 @@ POST /
 
 Example: `http://localhost:8856/`
 
-`GET /` from a browser serves an HTML landing page describing the endpoint, its tools, and how to add it to Claude, ChatGPT, and Gemini. MCP clients that `GET /` with `Accept: text/event-stream` (to open a standalone SSE stream) receive `405 Method Not Allowed`, because this server does not offer one. `DELETE /` is also `405` (no session management).
+`GET /` is dual-purpose. A browser (`Accept` includes `text/html`) gets an HTML landing page describing the endpoint, its tools, and how to add it to Claude, ChatGPT, and Gemini. Any other `GET` or `HEAD` (MCP clients asking for `text/event-stream` or `application/json`) receives `403 Forbidden` and an empty body. `DELETE /` returns `405 Method Not Allowed` (no session management).
 
 ### Tools
 

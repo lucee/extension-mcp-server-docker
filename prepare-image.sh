@@ -59,20 +59,24 @@ wget -q -O "$OUT" --timeout=120 --header="Accept: text/html,application/xhtml+xm
 	|| fail "landing page failed"
 grep -q "Lucee MCP Server" "$OUT" || fail "landing page content missing"
 
-# MCP clients GET the endpoint with Accept: text/event-stream to open an
-# SSE stream. This server does not offer one, so it must return 405 (and
-# not the HTML page) or clients reconnect in a tight loop.
-sse_hdr=/tmp/prepare-sse.hdr
-sse_body=/tmp/prepare-sse.body
-if wget -S -O "$sse_body" --timeout=30 --tries=1 --header="Accept: text/event-stream" "$URL" 2>"$sse_hdr"; then
-	fail "SSE GET should return 405, not success"
-fi
-grep -qE "HTTP/[0-9.]+ 405" "$sse_hdr" || fail "SSE GET should return 405"
-grep -qi "Allow: POST" "$sse_hdr" || fail "SSE GET should send Allow: POST"
-if [ -s "$sse_body" ] && grep -q "<html" "$sse_body"; then
-	fail "SSE GET should not return the HTML landing page"
-fi
-rm -f "$sse_hdr" "$sse_body"
+# Non-browser GET (MCP clients, Accept without text/html) must return 403
+# and not the HTML page, or clients may treat 200 HTML as a broken stream.
+assert_forbidden_get() {
+	accept="$1"
+	label="$2"
+	hdr=/tmp/prepare-forbid.hdr
+	body=/tmp/prepare-forbid.body
+	if wget -S -O "$body" --timeout=30 --tries=1 --header="Accept: $accept" "$URL" 2>"$hdr"; then
+		fail "$label should return 403, not success"
+	fi
+	grep -qE "HTTP/[0-9.]+ 403" "$hdr" || fail "$label should return 403"
+	if [ -s "$body" ] && grep -q "<html" "$body"; then
+		fail "$label should not return the HTML landing page"
+	fi
+	rm -f "$hdr" "$body"
+}
+assert_forbidden_get "text/event-stream" "SSE GET"
+assert_forbidden_get "application/json" "JSON GET"
 
 # DELETE ends an MCP session; this server has no sessions, so 405.
 del_hdr=/tmp/prepare-del.hdr
